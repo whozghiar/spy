@@ -1,0 +1,8 @@
+Flask~=3.0.3
+PyAutoGUI~=0.9.54
+pyscreeze
+Pillow
+opencv-python~=4.10.0.84
+requests~=2.32.3
+psutil~=6.0.0
+discord.py

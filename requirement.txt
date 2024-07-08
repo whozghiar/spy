@@ -1,8 +1,0 @@
-Flask
-PyAutoGUI
-pyscreeze
-Pillow
-opencv-python
-requests
-psutil
-discord.py

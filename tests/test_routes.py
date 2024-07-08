@@ -1,5 +1,5 @@
 import unittest
-from app.routes import app
+from app.api.routes import app
 
 class FlaskTestCase(unittest.TestCase):
     def setUp(self):

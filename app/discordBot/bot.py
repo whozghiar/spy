@@ -5,14 +5,20 @@ import discord
 import requests
 import json
 
-# Chemin vers le fichier token.txt
-token_path = os.path.join('app', 'discordAPI', 'api_token', 'token.txt')
+"""
+#    Read a token from a file and return it
+#    Returns: str: The token string
+"""
 
-# Lecture du token depuis le fichier
-with open(token_path, 'r') as file:
-    TOKEN = file.read().strip()
 
-API_URL = 'http://127.0.0.1:5000'  # URL de votre API Flask
+def read_token():
+    token_file = os.getenv('DISCORD_BOT_TOKEN_FILE', '/app/discordBot/api_token/token.txt')
+    with open(token_file, 'r') as file:
+        return file.read().strip()
+
+
+TOKEN = read_token()  # Token du bot Discord
+API_URL = os.getenv('API_URL', 'http://flask-api:5000')  # URL de votre API Flask
 
 intents = discord.Intents.default()
 intents.messages = True
@@ -38,6 +44,7 @@ async def handle_systeminfo(message):
     else:
         await message.channel.send('Failed to retrieve system information.')
 
+
 async def handle_screenshot(message):
     response = requests.get(f'{API_URL}/screenshot')
     if response.status_code == 200:
@@ -47,6 +54,7 @@ async def handle_screenshot(message):
     else:
         await message.channel.send('Failed to take screenshot.')
 
+
 async def handle_webcam(message):
     response = requests.get(f'{API_URL}/webcam')
     if response.status_code == 200:
@@ -55,6 +63,7 @@ async def handle_webcam(message):
         await message.channel.send(file=discord.File(io.BytesIO(base64.b64decode(image_data)), 'webcam_photo.jpg'))
     else:
         await message.channel.send('Failed to take webcam photo.')
+
 
 async def handle_help(message):
     help_text = """
@@ -66,6 +75,7 @@ async def handle_help(message):
     `/help` - Show this help message.
     """
     await message.channel.send(help_text)
+
 
 async def handle_delete(message):
     # Initialize an empty list to store messages
@@ -85,9 +95,11 @@ async def handle_delete(message):
             # Delete the confirmation message after 5 seconds (optional)
             await confirmation.delete(delay=5)
 
+
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
+
 
 @client.event
 async def on_message(message):
@@ -109,5 +121,6 @@ async def on_message(message):
             await handle_delete(message)
         else:
             await message.channel.send('Invalid command. Use `/help` for a list of available commands.')
+
 
 client.run(TOKEN)
