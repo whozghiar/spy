@@ -15,18 +15,23 @@ import pyautogui
     Returns: tuple: A tuple containing the base64 encoded string of the screenshot and the filename.
 """
 def take_screenshot():
-    timestamp = datetime.now().strftime('%d %m %Y %H:%M:%S')
-    hostname = socket.gethostname()
-    screenshot = pyautogui.screenshot()
+    try:
+        timestamp = datetime.now().strftime('%d %m %Y %H:%M:%S')
+        hostname = socket.gethostname()
+        screenshot = pyautogui.screenshot()
 
-    img_byte_arr = io.BytesIO()
-    screenshot.save(img_byte_arr, format='PNG')  # Sauvegarde du screenshot dans l'objet BytesIO
-    base64_string = base64.b64encode(img_byte_arr.getvalue()).decode('utf-8')  # Encodage en base64
+        img_byte_arr = io.BytesIO()
+        screenshot.save(img_byte_arr, format='PNG')
+        base64_string = base64.b64encode(img_byte_arr.getvalue()).decode('utf-8')
 
-    screenshot_info = {
-        "timestamp": timestamp,
-        "hostname": hostname,
-        "image": base64_string
-    }
-
-    return screenshot_info
+        return {
+            "success": True,
+            "timestamp": timestamp,
+            "hostname": hostname,
+            "image": base64_string
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e)
+        }

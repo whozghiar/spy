@@ -15,28 +15,37 @@ Returns:
 def take_webcam_photo():
     timestamp = datetime.now().strftime('%d %m %Y %H:%M:%S')
     hostname = socket.gethostname()
-    error = ""
     cam = cv2.VideoCapture(0)
 
     if not cam.isOpened():
         cam.release()
         return {
+            "success": False,
             "timestamp": timestamp,
             "hostname": hostname,
             "error": "Failed to open webcam."
         }
     ret, frame = cam.read()
-
-    base64_string = ""
-    if ret:
-        _, buffer = cv2.imencode('.jpg', frame)
-        base64_string = base64.b64encode(buffer).decode('utf-8')
     cam.release()
 
-    webcam_info = {
-        "timestamp": timestamp,
-        "hostname": hostname,
-        "image": base64_string
-    }
-    return webcam_info
+    if ret:
+        try:
+            _, buffer = cv2.imencode('.jpg', frame)
+            base64_string = base64.b64encode(buffer).decode('utf-8')
+            return {
+                "success": True,
+                "timestamp": timestamp,
+                "hostname": hostname,
+                "image": base64_string
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    else:
+        return {
+            "success": False,
+            "error": "Failed to capture webcam image."
+        }
 
