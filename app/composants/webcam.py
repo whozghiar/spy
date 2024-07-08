@@ -13,10 +13,18 @@ Returns:
     tuple: A tuple containing the base64 encoded string of the photo and the filename.
 """
 def take_webcam_photo():
-    timestamp = datetime.now().strftime('%d_%m_%Y_%H_%M_%S')
+    timestamp = datetime.now().strftime('%d %m %Y %H:%M:%S')
     hostname = socket.gethostname()
-    filename = f"{timestamp}_webcam_{hostname}.jpg"
+    error = ""
     cam = cv2.VideoCapture(0)
+
+    if not cam.isOpened():
+        cam.release()
+        return {
+            "timestamp": timestamp,
+            "hostname": hostname,
+            "error": "Failed to open webcam."
+        }
     ret, frame = cam.read()
 
     base64_string = ""
@@ -25,4 +33,10 @@ def take_webcam_photo():
         base64_string = base64.b64encode(buffer).decode('utf-8')
     cam.release()
 
-    return base64_string, filename
+    webcam_info = {
+        "timestamp": timestamp,
+        "hostname": hostname,
+        "image": base64_string
+    }
+    return webcam_info
+
