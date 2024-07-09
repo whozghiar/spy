@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
-from app.api.composants.screenshot import take_screenshot
-from app.api.composants.webcam import take_webcam_photo
-from app.api.composants.system import get_system_info
+from .composants.screenshot import take_screenshot
+from .composants.webcam import take_webcam_photo
+from .composants.system import get_system_info
 
 app = Flask(__name__)
 

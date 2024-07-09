@@ -1,27 +1,15 @@
 version: '3.8'
 
 services:
-  flask-api:
+  flask_api:
     build:
-      context: .
-      dockerfile: Dockerfile_api
-    container_name: flask_api
+      context: ..
+      dockerfile: infra/Dockerfile_api
     ports:
       - "5000:5000"
     volumes:
       - ../app:/app
     environment:
       - FLASK_ENV=development
-
-  discord-bot:
-    build:
-      context: .
-      dockerfile: Dockerfile_bot
-    container_name: discord_bot
-    depends_on:
-      - flask-api
-    volumes:
-      - ../app:/app
-    environment:
-      - DISCORD_BOT_TOKEN_FILE=/app/discordBot/api_token/token.txt
-      - API_URL=http://flask-api:5000
+      - FLASK_DEBUG=1
+    restart: unless-stopped
